@@ -3871,6 +3871,7 @@ GameObject:
   - component: {fileID: 1400833502}
   - component: {fileID: 1400833501}
   - component: {fileID: 1400833503}
+  - component: {fileID: 1400833504}
   m_Layer: 0
   m_Name: UniversalManagers
   m_TagString: Untagged
@@ -3918,6 +3919,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 033ac86b7c66f1c4397189fbf1d9a4ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LeaderboardTracker
+--- !u!114 &1400833504
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1400833500}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d690796bdf9cec418ea6924357b56ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SaveAndLoadManager
 --- !u!1 &1599961922
 GameObject:
   m_ObjectHideFlags: 0

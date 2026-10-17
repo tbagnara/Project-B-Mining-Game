@@ -21,15 +21,11 @@ public class MoneyManager : MonoBehaviour
     {
         bank += wallet;
     }
-    
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
+    public void SetBank(float m)
     {
-        
+        bank = m;
     }
+    
+
 }

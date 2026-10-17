@@ -1,24 +1,18 @@
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.UIElements;
+using System.Linq;
+using UnityEditor;
 
-public class Node 
-{
-    public RunHighScore Data { get; set; }
-    public Node Next { get; set; }
-
-    public Node(RunHighScore data) 
-    {
-        Data = data;
-        Next = null; // Next is null by default
-    }
-}
+[System.Serializable]
 public class RunHighScore
 {
-    public String name {get; private set;}
-    public float time {get; private set;}
-    public float money {get; private set;}
+    public String name;
+    public float time;
+    public float money;
     public RunHighScore(String n, float m, float t)
     {
         name = n;
@@ -26,13 +20,12 @@ public class RunHighScore
         time = t;
     }
 
-
 }
 
 public class LeaderboardTracker : MonoBehaviour
 {
     public static LeaderboardTracker Instance {get; private set;}
-    Node leaderBoardHead = null;
+    List<RunHighScore> leaderBoard = new List<RunHighScore>();
 
     void Awake()
     {
@@ -47,78 +40,46 @@ public class LeaderboardTracker : MonoBehaviour
 
     public void SaveRunScore(string name, float money, float time)
     {
-        Node newValue = new Node(new RunHighScore(name, money, time));
-        SaveRunScoreHelper(leaderBoardHead, newValue);
+        leaderBoard.Add(new RunHighScore(name, money, time));
+        leaderBoard = leaderBoard.OrderByDescending(hs => hs.money).ToList();
+        SaveAndLoadManager.Instance.SaveData(leaderBoard, MoneyManager.Instance.bank);
     }
 
-    public void SaveRunScoreHelper(Node current, Node newValue)
-    {
-        if (leaderBoardHead == null) // Empty leaderboard
-        {
-            leaderBoardHead = newValue;
-        }
-        else if (current.Data == leaderBoardHead.Data && newValue.Data.money > leaderBoardHead.Data.money) // New time isthe best
-        {
-            newValue.Next = leaderBoardHead;
-            leaderBoardHead = newValue;
-        }
-        else if (current.Next == null)
-        {
-            current.Next = newValue;
-        }
-        else if (current.Next.Data.money > newValue.Data.money) // If the next one is greater
-        {
-            SaveRunScoreHelper(current.Next, newValue);
-        }
-        else 
-        {
-            newValue.Next = current.Next;
-            current.Next = newValue;
-        }
 
-    }
     public Boolean IsRecordRun(float m)
     {
-        Node current = leaderBoardHead;
-        try
-        {
-            current = current.Next.Next.Next.Next;
-            if (m > current.Data.money) return true;
-            return false;
-        }
-        catch
-        {
-            return true;
-        }
-        
+
+        if (leaderBoard.Count < 5 || m > leaderBoard[4].money) return true;
+        return false;
         
     }
 
     public String GetTopRuns()
     {
         String runRecords;
-        Node current = leaderBoardHead;
-        String[] records = new String[5];
+        String[] records = {"- - - - - - - -","- - - - - - - -","- - - - - - - -","- - - - - - - -","- - - - - - - -"};
+        
         for (int i = 0; i<5; i++)
         {
-            if (current == null) 
+            if (leaderBoard[i] != null)
             {
-                records[i] = "- - - - - - - -";
-            }
-            else
-            {
-                records[i] = ""+ (i+1) +". "+current.Data.name + " $" + Math.Floor(current.Data.money*100) / 100 ;
-                current = current.Next;
+                records[i] = ""+(i+1)+". " + leaderBoard[i].name + " " + leaderBoard[i].money;
             }
             
         }
+        
         runRecords =    "_Leaderboard_" + '\n' +
                         records[0] + '\n'+
                         records[1] + '\n'+
-                        records[2] + '\n'+
+                        records[2] + '\n'+ 
                         records[3] + '\n'+
                         records[4];
         return runRecords;
+    }
+
+    public void LoadLeaderBoard(List<RunHighScore> lb)
+    {
+        leaderBoard = lb;
     }
 
 }

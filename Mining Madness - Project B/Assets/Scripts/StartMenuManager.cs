@@ -12,13 +12,9 @@ public class StartMenuManager : MonoBehaviour
         Time.timeScale = 1;
     }
 
-    void Update()
-    {
-        
-    }
-
     public void LoadScene(String sceneName)
     {
         SceneManager.LoadScene(sceneName);
     }
+
 }
