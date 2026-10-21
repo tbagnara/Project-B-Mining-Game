@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1cb02b6fd9ffe14fba9c07f64489bf1, type: 3}
+  m_Name: bedrock
+  m_EditorClassIdentifier: Assembly-CSharp::TileClass
+  tileName: Bedrock
+  tileSprite: {fileID: 8715820745954868566, guid: 525f94320f766d64f835f24be6a54de6, type: 3}

@@ -10,4 +10,5 @@ public class TileAtlas : ScriptableObject
     public TileClass diamond;
     public TileClass emerald;
     public TileClass ruby;
+    public TileClass bedrock;
 }

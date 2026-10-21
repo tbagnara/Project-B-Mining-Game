@@ -1,4 +1,3 @@
-using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -12,7 +11,7 @@ public class StartMenuManager : MonoBehaviour
         Time.timeScale = 1;
     }
 
-    public void LoadScene(String sceneName)
+    public void LoadScene(string sceneName)
     {
         SceneManager.LoadScene(sceneName);
     }

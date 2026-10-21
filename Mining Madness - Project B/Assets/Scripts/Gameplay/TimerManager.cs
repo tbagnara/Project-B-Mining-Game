@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class TimerManager : MonoBehaviour
 {
+    [SerializeField] private TextMeshProUGUI remainingTimeText;
     public static TimerManager Instance {get; private set;}
     public event Action<float> OnRunFinished;
-    public event Action<Boolean> OnRunStarted;
+    public event Action<bool> OnRunStarted;
     public float runStartLength;
     public float endTime;
     public float startTime;
-    [SerializeField] private TextMeshProUGUI remainingTimeText;
     float remainingTime;
-    Boolean over;
+    bool over;
     void Awake()
     {
         if (Instance != null && Instance !=this)
@@ -29,22 +29,11 @@ public class TimerManager : MonoBehaviour
         remainingTimeText.text = "60";
         OnRunStarted?.Invoke(true);
     }
-
-
+    
     void Update()
     {
         IsTimerOver();
         UpdateTimerText();
-    }
-
-    void IsTimerOver()
-    {
-        if (Time.time>=endTime && !over)
-        {
-            over = true;
-            Time.timeScale = 0;
-            OnRunFinished?.Invoke(endTime-startTime);
-        }
     }
     void UpdateTimerText()
     {
@@ -59,10 +48,23 @@ public class TimerManager : MonoBehaviour
         }
         
     }
-
+    void IsTimerOver()
+    {
+        if (Time.time>=endTime && !over)
+        {
+            over = true;
+            Time.timeScale = 0;
+            OnRunFinished?.Invoke(endTime-startTime);
+        }
+    }
     public void AddTime(float f)
     {
         endTime += f;
+    }
+
+    public void EndRun()
+    {
+        endTime = 0;
     }
 
 }

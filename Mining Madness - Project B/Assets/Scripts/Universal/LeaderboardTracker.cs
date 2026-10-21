@@ -19,9 +19,7 @@ public class RunHighScore
         money = m;
         time = t;
     }
-
 }
-
 public class LeaderboardTracker : MonoBehaviour
 {
     public static LeaderboardTracker Instance {get; private set;}
@@ -42,7 +40,7 @@ public class LeaderboardTracker : MonoBehaviour
     {
         leaderBoard.Add(new RunHighScore(name, money, time));
         leaderBoard = leaderBoard.OrderByDescending(hs => hs.money).ToList();
-        SaveAndLoadManager.Instance.SaveData(leaderBoard, MoneyManager.Instance.bank);
+        SaveAndLoadManager.Instance.SaveDataFromRun(leaderBoard, MoneyManager.Instance.GetBank() );
     }
 
 
@@ -63,7 +61,7 @@ public class LeaderboardTracker : MonoBehaviour
         {
             if (leaderBoard[i] != null)
             {
-                records[i] = ""+(i+1)+". " + leaderBoard[i].name + " " + leaderBoard[i].money;
+                records[i] = ""+(i+1)+". " + leaderBoard[i].name + " $" + Math.Floor(leaderBoard[i].money / 10) / 100 +"k";
             }
             
         }

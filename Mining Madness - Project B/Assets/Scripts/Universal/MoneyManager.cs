@@ -4,7 +4,7 @@ public class MoneyManager : MonoBehaviour
 {
 
     public static MoneyManager Instance {get; private set;}
-    public float bank;    
+    private float bank;    
 
     void Awake()
     {
@@ -17,14 +17,19 @@ public class MoneyManager : MonoBehaviour
         DontDestroyOnLoad(this);
     }
 
-    public void AddMoneyToBank(float wallet)
+    public void AddMoneyToBank(float amount)
     {
-        bank += wallet;
+        bank += amount;
     }
 
     public void SetBank(float m)
     {
         bank = m;
+    }
+
+    public float GetBank()
+    {
+        return bank;
     }
     
 

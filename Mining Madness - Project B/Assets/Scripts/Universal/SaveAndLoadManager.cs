@@ -1,6 +1,3 @@
-// Saving to JSON file code is from Rize Education class GDM4 - C# programming
-
-using System;
 using UnityEngine;
 using System.IO;
 using System.Collections.Generic;
@@ -12,6 +9,8 @@ public class PlayerSaveData
     public List<RunHighScore> leaderBoard;
     public float wealth;
     public string lastPlayed;
+    public bool speedUpgrade;
+    public bool fortuneUpgrade;
 
 }
 
@@ -40,7 +39,7 @@ public class SaveAndLoadManager : MonoBehaviour
         if (playerData.leaderBoard.Count != 0 )
             LeaderboardTracker.Instance.LoadLeaderBoard( playerData.leaderBoard);
     }
-    public void SavePlayerData()
+    public void SavePlayerData()  // Saves data to file
     {
         playerData.lastPlayed = System.DateTime.Now.ToString();
         string json = JsonUtility.ToJson(playerData, true);
@@ -75,15 +74,45 @@ public class SaveAndLoadManager : MonoBehaviour
         playerData = new PlayerSaveData();
         playerData.wealth = 0;
         playerData.leaderBoard = new List<RunHighScore>();
+        playerData.fortuneUpgrade = false;
+        playerData.speedUpgrade = false;
         SavePlayerData();
     }
     
-    public void SaveData(List<RunHighScore> lb, float wealth)
+    public void SaveDataFromRun(List<RunHighScore> lb, float wealth) 
     {
         playerData.leaderBoard = new List<RunHighScore>(lb);
         playerData.wealth = wealth;
 
         SavePlayerData();
+    }
+
+    public void PurchaseUpgrade(string upgrade, float cost)
+    {
+        if (upgrade.Equals("speed"))
+        {
+            playerData.speedUpgrade = true;
+            playerData.wealth -= cost;
+        }
+        else if (upgrade.Equals("fortune"))
+        {
+            playerData.fortuneUpgrade = true;
+            playerData.wealth -= cost;
+        }
+        SavePlayerData();
+    }
+
+    public bool GetUpgrades(string upgrade)
+    {
+        if (upgrade.Equals("speed"))
+        {
+            return playerData.speedUpgrade;
+        }
+        if (upgrade.Equals("fortune"))
+        {
+            return playerData.fortuneUpgrade;
+        }
+        return false;
     }
 
     void OnApplicationQuit()

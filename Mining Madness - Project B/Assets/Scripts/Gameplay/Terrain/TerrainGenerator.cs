@@ -136,40 +136,26 @@ public class TerrainGenerator : MonoBehaviour
     {
         for (int x = 0; x < worldSize; x ++ )
         {
-            //float height = worldSize;
             float height = Mathf.PerlinNoise((x + seed) * terrainFreq, seed * terrainFreq) * heightMultiplier * heightAddition;
             for (int y = 0; y < worldSize; y++) // changed height to world size
             {
                 Sprite tileSprite;
                 tileSprite = tileAtlas.stone.tileSprite;
                 
-                if (y < height - dirtLayerHeight || true)
-                {
-                    if (coalSpread.GetPixel(x,y).r > 0.5f) 
-                        tileSprite = tileAtlas.coal.tileSprite;
-                    else if (ironSpread.GetPixel(x,y).r > 0.5f) 
-                        tileSprite = tileAtlas.iron.tileSprite;
-                    else if (copperSpread.GetPixel(x,y).r > 0.5f) 
-                        tileSprite = tileAtlas.copper.tileSprite;
-                    else if (diamondSpread.GetPixel(x,y).r > 0.5f) 
-                        tileSprite = tileAtlas.diamond.tileSprite;
-                    else if (emeraldSpread.GetPixel(x,y).r > 0.5f) 
-                        tileSprite = tileAtlas.emerald.tileSprite;
-                    else if (rubySpread.GetPixel(x,y).r > 0.5f) 
-                        tileSprite = tileAtlas.ruby.tileSprite;
-                    else
-                        tileSprite = tileAtlas.stone.tileSprite;
-                }
-                else if (y < height - 1)
-                {
-                    tileSprite = tileAtlas.stone.tileSprite;
-                }
+                if (coalSpread.GetPixel(x,y).r > 0.5f) 
+                    tileSprite = tileAtlas.coal.tileSprite;
+                else if (ironSpread.GetPixel(x,y).r > 0.5f) 
+                    tileSprite = tileAtlas.iron.tileSprite;
+                else if (copperSpread.GetPixel(x,y).r > 0.5f) 
+                    tileSprite = tileAtlas.copper.tileSprite;
+                else if (diamondSpread.GetPixel(x,y).r > 0.5f) 
+                    tileSprite = tileAtlas.diamond.tileSprite;
+                else if (emeraldSpread.GetPixel(x,y).r > 0.5f) 
+                    tileSprite = tileAtlas.emerald.tileSprite;
+                else if (rubySpread.GetPixel(x,y).r > 0.5f) 
+                    tileSprite = tileAtlas.ruby.tileSprite;
                 else
-                {
-                    // Top layer
                     tileSprite = tileAtlas.stone.tileSprite;
-                }
-                
                 
                 if (generateCaves)
                 {
@@ -222,7 +208,7 @@ public class TerrainGenerator : MonoBehaviour
             {
                 if ((x * x) + (y * y) <= (radius * radius))
                 {
-                    RemoveTile(worldSize/2 + x, worldSize/2 + y);
+                    RemoveTile(worldSize/2 + x, worldSize*3/4 + y);
                 }
                 
             }
@@ -242,10 +228,17 @@ public class TerrainGenerator : MonoBehaviour
     }
     public Sprite GetTileSprite(int x, int y)
     {
-        if (worldTiles.Contains(new Vector2Int(x,y)) && x >= 1 && x < worldSize -1 && y >= 1 && y < worldSize -1)
+        try
         {
-            Sprite ret = worldTilesObjects[worldTiles.IndexOf(new Vector2(x,y))].GetComponent<SpriteRenderer>().sprite;
-            return ret;
+            if (worldTiles.Contains(new Vector2Int(x,y)) && x >= 1 && x < worldSize -1 && y >= 1 && y < worldSize -1)
+            {
+                Sprite ret = worldTilesObjects[worldTiles.IndexOf(new Vector2(x,y))].GetComponent<SpriteRenderer>().sprite;
+                return ret;
+            }
+        }
+        catch
+        {
+            
         }
         return null;
     }
@@ -264,9 +257,7 @@ public class TerrainGenerator : MonoBehaviour
             newTile.GetComponent<SpriteRenderer>().sprite = tileSprite;
             newTile.name = tileSprite.name;
             newTile.transform.position = new Vector2(x + 0.5f, y + 0.5f);
-
             newTile.AddComponent<BoxCollider2D>();
-            //newTile.GetComponent<BoxCollider2D>().size = Vector2.one;
 
             worldTiles.Add(newTile.transform.position - (Vector3.one * 0.5f));
             worldTilesObjects.Add(newTile);

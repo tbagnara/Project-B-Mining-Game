@@ -34,4 +34,11 @@ public class BlockSelectOverlay : MonoBehaviour
     {
         sp.enabled = false;
     }
+    void Update()
+    {
+        if (Time.timeScale == 0)
+        {
+            Hide();
+        }
+    }
 }

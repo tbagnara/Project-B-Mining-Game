@@ -19,3 +19,4 @@ MonoBehaviour:
   diamond: {fileID: 11400000, guid: abb3f28e6f6a237499f2342f1f857686, type: 2}
   emerald: {fileID: 11400000, guid: 2e285b2531c56f14bb77d7cc5f23f14b, type: 2}
   ruby: {fileID: 11400000, guid: 0898a0ab5e4804e45b6352989ea849bb, type: 2}
+  bedrock: {fileID: 11400000, guid: 2b4345d3a66a91741a2d2910fd9a0860, type: 2}

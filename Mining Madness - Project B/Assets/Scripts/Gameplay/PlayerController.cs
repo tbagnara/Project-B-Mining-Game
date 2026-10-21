@@ -37,10 +37,15 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();    
         sp = GetComponent<SpriteRenderer>();
-        spawnPos = new Vector2(terrainGenerator.worldSize/2, terrainGenerator.worldSize/2);
+        spawnPos = new Vector2(terrainGenerator.worldSize/2, terrainGenerator.worldSize*3/4);
         rb.position = spawnPos;
         
         Time.timeScale = 1;    
+
+        if (SaveAndLoadManager.Instance.GetUpgrades("speed") ) 
+        {
+            miningSpeed = 4;    
+        }
     }
 
     void Update()
@@ -54,11 +59,13 @@ public class PlayerController : MonoBehaviour
         if (!GameManager.Instance.IsGameOver() ) { // Left click
             
             Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition); 
-            Vector2 direction = (mousePos - rb.position).normalized;    // Sets angle from player to mouse for the raycast
-            RaycastHit2D hit = Physics2D.Raycast(rb.position, direction, 4); // Sends raycast finds where it hits
-            Vector2 cellPos = hit.point + direction*.01f;
+            Vector2 direction = (mousePos - rb.position).normalized;    // Finds angle from player to mouse for the raycast
+            RaycastHit2D hit = Physics2D.Raycast(rb.position, direction, 4); // Sends raycast - finds where it hits
+            Vector2 cellPos = hit.point + direction*.01f; // Adjusts slightly to be inside block instead of edge
+
             blockSelectedPos.x = Mathf.RoundToInt(cellPos.x - 0.5f); 
             blockSelectedPos.y = Mathf.RoundToInt(cellPos.y - 0.5f); 
+
             if (hit)
             {
                 BlockSelectOverlay.Instance.SetPositioning(blockSelectedPos);
@@ -80,7 +87,7 @@ public class PlayerController : MonoBehaviour
                     }
                     ShowMineOverlay(blockSelectedPos, blockMinedPosition);
 
-                    if ( (Time.time - buttoneHeldTime) < 2/miningSpeed) return; // Doesn't run until the block has been mined for 2 seconds
+                    if ( (Time.time - buttoneHeldTime) < 2/miningSpeed) return; // Doesn't run until the block has been mined for the correct amount of time
                     
                     if (terrainGenerator.GetTileSprite(blockSelectedPos.x, blockSelectedPos.y) != null)
                     {
@@ -111,7 +118,6 @@ public class PlayerController : MonoBehaviour
 
     void Move() // Directional Movement
     {
-        //if (GameManager.Instance.IsGameOver() ) return;
         if (Time.timeScale == 0) return;
         float moveInput = Input.GetAxis("Horizontal");
 
@@ -142,10 +148,8 @@ public class PlayerController : MonoBehaviour
         }
         
     }
-
     void Jump() // Vertical Movement
     {
-        //if (GameManager.Instance.IsGameOver() ) return;
         if (Time.timeScale == 0) return;
         if (Input.GetButtonDown("Jump") && IsGrounded)
         {

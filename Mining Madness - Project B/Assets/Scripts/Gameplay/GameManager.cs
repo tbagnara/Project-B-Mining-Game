@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.ComponentModel;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -16,7 +17,7 @@ public class GameManager : MonoBehaviour
     public float wallet;
     float runTime;
     public Boolean gameEnded;
-
+    private int fortune = 1;
 
     void Awake()
     {
@@ -41,6 +42,10 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         walletText.text = "$0.00";
+        if (SaveAndLoadManager.Instance.GetUpgrades("fortune"))
+        {
+            fortune = 2;
+        }
     }
 
     void Update()
@@ -106,6 +111,7 @@ public class GameManager : MonoBehaviour
                     return;
                 }
         }
+        price *= fortune;
         CheckForTimeBonus(wallet + price);
         wallet += price;
         walletText.text = "$" +wallet;
@@ -114,15 +120,15 @@ public class GameManager : MonoBehaviour
     {
         if ( Math.Floor(newAmount / 10000) > Math.Floor(wallet / 10000) )
         {
-            TimerManager.Instance.AddTime(120);
+            TimerManager.Instance.AddTime(60);
+        }
+        else if ( Math.Floor(newAmount / 5000) > Math.Floor(wallet / 5000) )
+        {
+            TimerManager.Instance.AddTime(20);
         }
         else if ( Math.Floor(newAmount / 1000) > Math.Floor(wallet / 1000) )
         {
-            TimerManager.Instance.AddTime(60);
-        }
-        else if ( Math.Floor(newAmount / 100) > Math.Floor(wallet / 100) )
-        {
-            TimerManager.Instance.AddTime(15);
+            TimerManager.Instance.AddTime(10);
         }
         
     }
@@ -143,6 +149,11 @@ public class GameManager : MonoBehaviour
                 Time.timeScale = 1;
             }
         }
+    }
+
+    public void ExitRun()
+    {
+        TimerManager.Instance.EndRun();
     }
 
     void DisplayPauseMenu(String s)    // Brings UI (pauseMenu) ontoscreen, changes text based on which menu is in use
