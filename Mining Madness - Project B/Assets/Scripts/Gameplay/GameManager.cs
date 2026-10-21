@@ -153,6 +153,7 @@ public class GameManager : MonoBehaviour
 
     public void ExitRun()
     {
+        DisplayPauseMenu("Hide");
         TimerManager.Instance.EndRun();
     }
 

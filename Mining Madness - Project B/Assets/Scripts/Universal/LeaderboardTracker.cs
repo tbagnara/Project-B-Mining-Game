@@ -6,6 +6,7 @@ using UnityEngine.Rendering;
 using UnityEngine.UIElements;
 using System.Linq;
 using UnityEditor;
+using UnityEngine.SocialPlatforms.Impl;
 
 [System.Serializable]
 public class RunHighScore
@@ -59,11 +60,17 @@ public class LeaderboardTracker : MonoBehaviour
         
         for (int i = 0; i<5; i++)
         {
-            if (leaderBoard[i] != null)
+            try
             {
-                records[i] = ""+(i+1)+". " + leaderBoard[i].name + " $" + Math.Floor(leaderBoard[i].money / 10) / 100 +"k";
+                if (leaderBoard[i] != null)
+                {
+                    records[i] = ""+(i+1)+". " + leaderBoard[i].name + " $" + Math.Floor(leaderBoard[i].money / 10) / 100 +"k";
+                }
             }
-            
+            catch
+            {
+                
+            }
         }
         
         runRecords =    "_Leaderboard_" + '\n' +
