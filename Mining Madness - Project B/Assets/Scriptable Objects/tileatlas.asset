@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 091414bbea980544ea2533e6a29a2ab4, type: 3}
+  m_Name: tileatlas
+  m_EditorClassIdentifier: Assembly-CSharp::TileAtlas
+  stone: {fileID: 11400000, guid: 35ee2b8505fdf7640ae416d51c73ece9, type: 2}
+  copper: {fileID: 11400000, guid: 3b2237335348d1045a32de8b2c6912f2, type: 2}
+  iron: {fileID: 11400000, guid: 4406b1f0362b0fb4ab7029b48bb5976e, type: 2}
+  coal: {fileID: 11400000, guid: 7c1e96ef51d84e445b939fea4e3a3904, type: 2}
+  diamond: {fileID: 11400000, guid: abb3f28e6f6a237499f2342f1f857686, type: 2}
+  emerald: {fileID: 11400000, guid: 2e285b2531c56f14bb77d7cc5f23f14b, type: 2}
+  ruby: {fileID: 11400000, guid: 0898a0ab5e4804e45b6352989ea849bb, type: 2}

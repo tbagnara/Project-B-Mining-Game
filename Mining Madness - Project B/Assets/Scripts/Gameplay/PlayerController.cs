@@ -1,36 +1,45 @@
-using NUnit.Framework;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] private float moveSpeed = 5f; 
-    [SerializeField] private float jumpHeight = 5f;
-    [SerializeField] private float miningSpeed = 1f;
-    
     private Rigidbody2D rb;
-    private CharacterController controller;
     private SpriteRenderer sp;
+    public TerrainGenerator terrainGenerator;
+
+
+    [Header("PlayerModifiers")]
+    [SerializeField] private float moveSpeed = 7f; 
+    [SerializeField] private float jumpHeight = 7f;
+    [SerializeField] private float miningSpeed = 1f;
+    [SerializeField] private Vector2 spawnPos;
+    
+    
+
+    [Header("Ground Detection")]
     public ContactFilter2D ContactFilterDown;
     public ContactFilter2D ContactFilterLeft;
     public ContactFilter2D ContactFilterRight;
-    public Tilemap groundTilemap;
-    public Tilemap overlayTilemap;
+
+    [Header("Sprites")]
     public Sprite facingLeft;
     public Sprite facingRight;
     public Sprite facingForward;
-    public TileBase pointerTile;
+
+
+
     private bool IsGrounded => rb.IsTouching(ContactFilterDown);
     private bool IsTouchingRight => rb.IsTouching(ContactFilterRight);
     private bool IsTouchingLeft => rb.IsTouching(ContactFilterLeft);
     private float buttoneHeldTime;
     private bool isMining;
-    private Vector3Int miningPosition;
+    private Vector2Int blockSelectedPos;
+    private Vector2Int blockMinedPosition;
     void Start()
     {
-        controller = GetComponent<CharacterController>();
         rb = GetComponent<Rigidbody2D>();    
         sp = GetComponent<SpriteRenderer>();
+        spawnPos = new Vector2(terrainGenerator.worldSize/2, terrainGenerator.worldSize/2);
+        rb.position = spawnPos;
+        
         Time.timeScale = 1;    
     }
 
@@ -40,61 +49,65 @@ public class PlayerController : MonoBehaviour
         Jump();
         Mine();
     }
-
     void Mine()
     {   
-        if (Input.GetKey( KeyCode.Mouse0 ) && !GameManager.Instance.IsGameOver() ) { // Left click
+        if (!GameManager.Instance.IsGameOver() ) { // Left click
+            
             Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition); 
             Vector2 direction = (mousePos - rb.position).normalized;    // Sets angle from player to mouse for the raycast
-            RaycastHit2D hit = Physics2D.Raycast(rb.position, direction, 2); // Sends raycast finds where it hits
-
+            RaycastHit2D hit = Physics2D.Raycast(rb.position, direction, 4); // Sends raycast finds where it hits
+            Vector2 cellPos = hit.point + direction*.01f;
+            blockSelectedPos.x = Mathf.RoundToInt(cellPos.x - 0.5f); 
+            blockSelectedPos.y = Mathf.RoundToInt(cellPos.y - 0.5f); 
             if (hit)
             {
-                Vector3Int cellPos = groundTilemap.WorldToCell(hit.point + direction*.01f); // Sets cell position, adjusts slightly to be more accurate
-                
-                if (!isMining)  // If the mining of a block is about to start == sets the start time and mining position 
+                BlockSelectOverlay.Instance.SetPositioning(blockSelectedPos);
+
+                if (Input.GetKey( KeyCode.Mouse0 ) )
                 {
-                    isMining = true;
-                    buttoneHeldTime = Time.time;
-                    miningPosition = cellPos;
-                }
-                else    // Currently mining
-                {
-                    if (cellPos != miningPosition) // If pointer position has changed from mining position == mining must restart
+                    if (!isMining)  // If the mining of a block is about to start == sets the start time and mining position 
                     {
-                        isMining = false;
+                        isMining = true;
+                        buttoneHeldTime = Time.time;
+                        blockMinedPosition = blockSelectedPos;
+                    }
+                    else    // Currently mining
+                    {
+                        if (blockSelectedPos != blockMinedPosition) // If pointer position has changed from mining position == mining must restart
+                        {
+                            isMining = false;
+                        }
+                    }
+                    ShowMineOverlay(blockSelectedPos, blockMinedPosition);
+
+                    if ( (Time.time - buttoneHeldTime) < 2/miningSpeed) return; // Doesn't run until the block has been mined for 2 seconds
+                    
+                    if (terrainGenerator.GetTileSprite(blockSelectedPos.x, blockSelectedPos.y) != null)
+                    {
+                        GameManager.Instance.OreMined( terrainGenerator.RemoveTile(blockSelectedPos.x, blockSelectedPos.y) ); // Sends which ore was mined to the GameManager
                     }
                 }
-                ShowMineOverlay(cellPos, miningPosition);
-
-                if ( (Time.time - buttoneHeldTime) < 2) return; // Doesn't run until the block has been mined for 2 seconds
-
-                if (groundTilemap.HasTile(cellPos))
-                {
-                    GameManager.Instance.OreMined(groundTilemap.GetSprite(cellPos).name); // Sends which ore was mined to the GameManager
-                    groundTilemap.SetTile(cellPos, null); // Breaks block
-                }
+            }
+            else
+            {
+                BlockSelectOverlay.Instance.Hide();
             }   
         }
         isMining = false;
-        overlayTilemap.ClearAllTiles();
         MiningOverlayAnimation.Instance.Hide();
     }
-
-    void ShowMineOverlay(Vector3Int cellpos, Vector3Int miningPosition)
+    void ShowMineOverlay(Vector2Int cellpos, Vector2Int miningPosition)
     {
         if (cellpos != miningPosition)
         {
-            overlayTilemap.ClearAllTiles();
             MiningOverlayAnimation.Instance.Hide();
         }
         else
         {
-            overlayTilemap.SetTile(cellpos, pointerTile);
-            MiningOverlayAnimation.Instance.SetPositioning(cellpos);
+            MiningOverlayAnimation.Instance.SetPositioning(cellpos, miningSpeed);
         }
     }
-
+    
 
     void Move() // Directional Movement
     {

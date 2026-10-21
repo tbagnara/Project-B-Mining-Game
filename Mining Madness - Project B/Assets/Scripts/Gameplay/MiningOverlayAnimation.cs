@@ -25,23 +25,19 @@ public class MiningOverlayAnimation : MonoBehaviour
         sp.enabled = false;
     }
 
-    void Update()
-    {
-        
-    }
-
-    public void SetPositioning(Vector3Int pos)
+    public void SetPositioning(Vector2Int pos, float miningSpeed)
     {
         if (sp.enabled == false)
         {
             ani.StopPlayback();
+            ani.speed = miningSpeed;
             sp.enabled = true;
             ani.Play("Mining");
         }
-        Vector3 newPos = pos;
-        newPos.z = -1;
-        newPos.x = pos.x * 0.75f + .375f;
-        newPos.y = pos.y * 0.75f + .375f;
+        Vector3 newPos = new Vector3(pos.x + 0.5f, pos.y + 0.5f, -1);
+        //newPos.z = -1;
+        //newPos.x = pos.x * 0.75f + .375f;
+        //newPos.y = pos.y * 0.75f + .375f;
         tsf.position = newPos;
         
     }

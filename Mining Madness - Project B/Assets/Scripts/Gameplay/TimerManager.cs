@@ -7,6 +7,7 @@ public class TimerManager : MonoBehaviour
     public static TimerManager Instance {get; private set;}
     public event Action<float> OnRunFinished;
     public event Action<Boolean> OnRunStarted;
+    public float runStartLength;
     public float endTime;
     public float startTime;
     [SerializeField] private TextMeshProUGUI remainingTimeText;
@@ -24,7 +25,7 @@ public class TimerManager : MonoBehaviour
     void Start()
     {
         startTime = Time.time;
-        endTime = startTime + 10; // 60 seconds after startTime
+        endTime = startTime + runStartLength; // 60 seconds after startTime
         remainingTimeText.text = "60";
         OnRunStarted?.Invoke(true);
     }

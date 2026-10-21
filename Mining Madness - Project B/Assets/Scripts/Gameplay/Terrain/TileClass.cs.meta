@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: b1cb02b6fd9ffe14fba9c07f64489bf1
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - stone: {fileID: 6743378644231748151, guid: c7fc811b2475f2347846efe49047ef0d, type: 3}
+  - iron: {fileID: 1523633253, guid: c7fc811b2475f2347846efe49047ef0d, type: 3}
+  - copper: {fileID: -2137706343, guid: c7fc811b2475f2347846efe49047ef0d, type: 3}
+  - coal: {fileID: -1587520465, guid: c7fc811b2475f2347846efe49047ef0d, type: 3}
+  - emerald: {fileID: -1244585850, guid: c7fc811b2475f2347846efe49047ef0d, type: 3}
+  - diamond: {fileID: -834527892, guid: c7fc811b2475f2347846efe49047ef0d, type: 3}
+  - amethyst: {fileID: 738174346, guid: c7fc811b2475f2347846efe49047ef0d, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
